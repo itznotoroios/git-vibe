@@ -11,10 +11,15 @@ export function analyzeCommits(commits) {
 
   commits.forEach((commit) => {
     if (!commit?.date) return;
-    
-    const date = new Date(commit.date);
-    if (isNaN(date.getTime())) return; // Skip invalid dates
-    
+
+    let date;
+    try {
+      date = new Date(commit.date);
+    } catch (e) {
+      return;
+    }
+    if (isNaN(date.getTime())) return;
+
     const hour = date.getHours();
     const day = date.getDay();
 
@@ -38,7 +43,7 @@ export function analyzeCommits(commits) {
 
   const messageTypes = { fix: 0, feat: 0, refactor: 0, chore: 0, docs: 0, other: 0 };
   commits.forEach((commit) => {
-    const msg = commit.message.toLowerCase();
+    const msg = commit.message?.toLowerCase() || '';
     if (msg.startsWith('fix') || msg.includes('bug')) messageTypes.fix++;
     else if (msg.startsWith('feat') || msg.includes('feature')) messageTypes.feat++;
     else if (msg.startsWith('refactor') || msg.includes('cleanup')) messageTypes.refactor++;
@@ -51,11 +56,15 @@ export function analyzeCommits(commits) {
     b[1] > a[1] ? b : a
   )[0];
 
-  const totalMessageLength = commits.reduce((sum, commit) => sum + commit.message.length, 0);
+  const totalMessageLength = commits.reduce((sum, commit) => sum + (commit.message?.length || 0), 0);
   const avgMessageLength = totalMessageLength / totalCommits;
 
   let rapidCommits = 0;
-  const sortedCommits = [...commits].sort((a, b) => new Date(a.date) - new Date(b.date));
+  const sortedCommits = [...commits].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateA - dateB;
+  });
   for (let i = 1; i < sortedCommits.length; i++) {
     const prevTime = new Date(sortedCommits[i - 1].date).getTime();
     const currTime = new Date(sortedCommits[i].date).getTime();
@@ -68,7 +77,7 @@ export function analyzeCommits(commits) {
 
   let deletionAdditionRatio = 1.0;
   commits.forEach((commit) => {
-    const msg = commit.message.toLowerCase();
+    const msg = commit.message?.toLowerCase() || '';
     if (msg.includes('refactor') || msg.includes('cleanup') || msg.includes('simplify')) {
       deletionAdditionRatio += 0.3;
     }
@@ -81,9 +90,11 @@ export function analyzeCommits(commits) {
   let weekendCommits = 0;
   commits.forEach((commit) => {
     const date = new Date(commit.date);
-    const day = date.getDay();
-    if (day === 0 || day === 6) {
-      weekendCommits++;
+    if (!isNaN(date.getTime())) {
+      const day = date.getDay();
+      if (day === 0 || day === 6) {
+        weekendCommits++;
+      }
     }
   });
   const weekendRatio = weekendCommits / totalCommits;
@@ -91,8 +102,10 @@ export function analyzeCommits(commits) {
   const dailyCounts = {};
   commits.forEach((commit) => {
     const date = new Date(commit.date);
-    const dayKey = date.toISOString().split('T')[0];
-    dailyCounts[dayKey] = (dailyCounts[dayKey] || 0) + 1;
+    if (!isNaN(date.getTime())) {
+      const dayKey = date.toISOString().split('T')[0];
+      dailyCounts[dayKey] = (dailyCounts[dayKey] || 0) + 1;
+    }
   });
 
   const counts = Object.values(dailyCounts);
