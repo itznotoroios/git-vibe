@@ -1,6 +1,6 @@
 /**
  * ascii-renderer.js - Terminal ASCII art card formatter.
- * Renders a high-contrast, brutalist ASCII card using ANSI escape codes.
+ * Now includes contribution heatmap and progress bars.
  */
 
 // ANSI escape codes for high-contrast terminal output
@@ -13,23 +13,38 @@ const ANSI = {
   CYAN: '\x1b[36m',
   WHITE: '\x1b[37m',
   BG_BLACK: '\x1b[40m',
-  BG_RED: '\x1b[41m'
+  BG_RED: '\x1b[41m',
+  BG_GREEN: '\x1b[42m',
+  BG_YELLOW: '\x1b[43m'
 };
 
 /**
+ * Renders a contribution heatmap bar.
+ * @param {number} value - 0-100 percentage
+ * @param {string} color - ANSI color code
+ * @returns {string}
+ */
+function heatBar(value, color) {
+  const filled = Math.round(value / 5);
+  const empty = 20 - filled;
+  return color + '█'.repeat(filled) + ANSI.RESET + '░'.repeat(empty);
+}
+
+/**
  * Renders a brutalist ASCII card in the terminal.
- * @param {{ archetype: string, roast: string, vibeScore: string, stats: object }} profile
+ * @param {{ archetype: string, roast: string, vibeScore: string, stats: object, subMetrics?: object }} profile
  * @returns {string}
  */
 export function renderAsciiCard(profile) {
-  const { archetype, roast, vibeScore, stats } = profile;
-  const { totalCommits, nightOwlRatio, author } = stats;
+  const { archetype, roast, vibeScore, stats, subMetrics } = profile;
+  const { totalCommits, nightOwlRatio, author, peakHour, messageTypes } = stats;
 
   const border = '═';
   const corner = '╔';
   const cornerEnd = '╗';
   const bottomCorner = '╚';
   const bottomCornerEnd = '╝';
+  const midBorder = '├' + '─'.repeat(42) + '┤';
 
   const width = 48;
   const horizontalBorder = corner + border.repeat(width - 2) + cornerEnd;
@@ -42,23 +57,50 @@ export function renderAsciiCard(profile) {
   lines.push(horizontalBorder);
 
   // Archetype
-  lines.push(`${ANSI.BOLD}${ANSI.RED}  ARCHETYPE: ${ANSI.RESET}${ANSI.BOLD}${archetype}${ANSI.RESET}`);
+  lines.push(`${ANSI.BOLD}${ANSI.RED}  ARCHETYPE:${ANSI.RESET} ${ANSI.BOLD}${archetype}${ANSI.RESET}`);
   lines.push('');
 
   // Vibe Score
   lines.push(`${ANSI.YELLOW}  VIBE SCORE: ${ANSI.RESET}${vibeScore}`);
+  lines.push(midBorder);
+
+  // Stats breakdown
+  const nightPct = Math.round(nightOwlRatio * 100);
+  const consistencyPct = Math.round(subMetrics?.consistencyScore || 50);
+
+  lines.push(`${ANSI.CYAN}  ${ANSI.RESET} Total Commits:   ${ANSI.BOLD}${totalCommits}${ANSI.RESET}`);
+  lines.push(`${ANSI.CYAN}  ${ANSI.RESET} Night Owl:       ${heatBar(nightPct, ANSI.RED)} ${nightPct}%`);
+  lines.push(`${ANSI.CYAN}  ${ANSI.RESET} Peak Hour:       ${ANSI.BOLD}${peakHour}:00${ANSI.RESET}`);
+  lines.push(`${ANSI.CYAN}  ${ANSI.RESET} Consistency:     ${heatBar(consistencyPct, ANSI.GREEN)} ${consistencyPct}%`);
   lines.push('');
 
-  // Stats
-  const nightPct = Math.round(nightOwlRatio * 100);
-  lines.push(`${ANSI.CYAN}  - Total Commits: ${ANSI.RESET}${totalCommits}`);
-  lines.push(`${ANSI.CYAN}  - Night Owl Ratio: ${ANSI.RESET}${nightPct}%`);
-  lines.push(`${ANSI.CYAN}  - Most Used File: ${ANSI.RESET}index.js (Danger!)`);
-  lines.push('');
+  // Message type breakdown
+  if (messageTypes) {
+    lines.push(`${ANSI.YELLOW}  MESSAGE TYPES:${ANSI.RESET}`);
+    Object.entries(messageTypes).forEach(([type, count]) => {
+      if (count > 0) {
+        const pct = Math.round((count / totalCommits) * 100);
+        const color = type === 'fix' ? ANSI.RED : 
+                      type === 'feat' ? ANSI.GREEN : 
+                      type === 'refactor' ? ANSI.YELLOW : ANSI.WHITE;
+        lines.push(`${color}    ${type.padEnd(10)}${ANSI.RESET} ${heatBar(pct, color)} ${pct}%`);
+      }
+    });
+    lines.push('');
+  }
 
   // Roast
   lines.push(`${ANSI.GREEN}  "${roast}"${ANSI.RESET}`);
   lines.push('');
+
+  // Commit suggestions (if available)
+  if (subMetrics?.commitSuggestions?.length) {
+    lines.push(`${ANSI.CYAN}  SUGGESTED COMMITS:${ANSI.RESET}`);
+    subMetrics.commitSuggestions.slice(0, 3).forEach((msg, i) => {
+      lines.push(`${ANSI.WHITE}    ${i + 1}. ${msg}${ANSI.RESET}`);
+    });
+    lines.push('');
+  }
 
   // Footer
   lines.push(bottomBorder);
@@ -68,13 +110,13 @@ export function renderAsciiCard(profile) {
 }
 
 /**
- * Returns raw ASCII card without ANSI codes (for file output).
- * @param {{ archetype: string, roast: string, vibeScore: string, stats: object }} profile
+ * Renders plain ASCII card without ANSI codes (for file output).
+ * @param {{ archetype: string, roast: string, vibeScore: string, stats: object, subMetrics?: object }} profile
  * @returns {string}
  */
 export function renderPlainAsciiCard(profile) {
-  const { archetype, roast, vibeScore, stats } = profile;
-  const { totalCommits, nightOwlRatio, author } = stats;
+  const { archetype, roast, vibeScore, stats, subMetrics } = profile;
+  const { totalCommits, nightOwlRatio, author, peakHour } = stats;
 
   const border = '═';
   const corner = '╔';
@@ -88,15 +130,15 @@ export function renderPlainAsciiCard(profile) {
 
   const lines = [];
 
-  lines.push(`  GIT-VIBE CARD: @${author}`);
+  lines.push(`  GIT-VIBE CARD: @${author} ${profile.emoji || '📊'}`);
   lines.push(horizontalBorder);
   lines.push(`  ARCHETYPE: ${archetype}`);
   lines.push('');
   lines.push(`  VIBE SCORE: ${vibeScore}`);
-  lines.push('');
-  lines.push(`  - Total Commits: ${totalCommits}`);
-  lines.push(`  - Night Owl Ratio: ${Math.round(nightOwlRatio * 100)}%`);
-  lines.push(`  - Most Used File: index.js (Danger!)`);
+  lines.push('─'.repeat(46));
+  lines.push(`  Total Commits: ${totalCommits}`);
+  lines.push(`  Night Owl: ${Math.round(nightOwlRatio * 100)}%`);
+  lines.push(`  Peak Hour: ${peakHour}:00`);
   lines.push('');
   lines.push(`  "${roast}"`);
   lines.push('');

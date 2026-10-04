@@ -1,0 +1,23 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-10-04T13:59:29.670Z",
+  "archetype": "THE NOCTURNAL GREMLIN",
+  "emoji": "🦉",
+  "vibeScore": "50% Night / 50% Day",
+  "roast": "Bro, 50% of your commits happen between 11 PM and 5 AM. Your circadian rhythm is a suggestion, not a rule.",
+  "stats": {
+    "totalCommits": 10,
+    "author": "rihan",
+    "nightOwlRatio": 0.5,
+    "peakHour": 23,
+    "consistencyScore": 84.1886116991581,
+    "messageTypes": {
+      "fix": 4,
+      "feat": 2,
+      "refactor": 3,
+      "chore": 0,
+      "docs": 0,
+      "other": 1
+    }
+  }
+}
