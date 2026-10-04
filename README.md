@@ -141,7 +141,7 @@ git-vibe --format table   # Formatted terminal table
 GIT_VIBE_USE_LLM=true git-vibe --enhanced
 
 # Custom API endpoint
-GIT_VIBE_USE_LLM=true JARVIS_API_URL=http://your-api/v1 git-vibe --enhanced
+GIT_VIBE_USE_LLM=true LLM_API_URL=https://api.example.com/v1 LLM_API_KEY=your-key git-vibe --enhanced
 ```
 
 ### Environment Variables
@@ -149,9 +149,9 @@ GIT_VIBE_USE_LLM=true JARVIS_API_URL=http://your-api/v1 git-vibe --enhanced
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `GIT_VIBE_USE_LLM` | `false` | Enable LLM-enhanced roasts |
-| `JARVIS_API_KEY` | — | Your free LLM API key |
-| `JARVIS_API_URL` | `http://127.0.0.1:31415/v1` | API endpoint |
-| `JARVIS_MODEL` | `auto` | Model to use |
+| `LLM_API_KEY` | — | Your LLM API key (required for --enhanced) |
+| `LLM_API_URL` | — | OpenAI-compatible API endpoint |
+| `LLM_MODEL` | `auto` | Model to use |
 
 ---
 

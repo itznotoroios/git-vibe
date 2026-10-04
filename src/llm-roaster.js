@@ -3,9 +3,9 @@
  * Creates contextually smarter, funnier roasts based on developer archetype.
  */
 
-const FREELLMAPI_URL = process.env.JARVIS_API_URL || 'http://127.0.0.1:31415/v1';
-const FREELLMAPI_KEY = process.env.JARVIS_API_KEY || 'freellmapi-free';
-const MODEL = process.env.JARVIS_MODEL || 'auto';
+const LLM_API_URL = process.env.LLM_API_URL || null;
+const LLM_API_KEY = process.env.LLM_API_KEY || null;
+const LLM_MODEL = process.env.LLM_MODEL || 'auto';
 
 /**
  * Generates an enhanced roast using LLM.
@@ -29,11 +29,11 @@ export async function generateEnhancedRoast(stats, archetype) {
 Generate a savage roast:`;
 
   try {
-    const response = await fetch(`${FREELLMAPI_URL}/chat/completions`, {
+    const response = await fetch(`${LLM_API_URL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${FREELLMAPI_KEY}`
+        'Authorization': `Bearer ${LLM_API_KEY}`
       },
       body: JSON.stringify({
         model: MODEL,
@@ -124,6 +124,5 @@ export function suggestCommitMessages(stats, archetype) {
  */
 export function shouldUseLLM() {
   return process.env.GIT_VIBE_USE_LLM === 'true' || 
-         process.env.JARVIS_API_KEY || 
-         process.env.FREELLMAPI_KEY;
+         process.env.LLM_API_KEY;
 }
