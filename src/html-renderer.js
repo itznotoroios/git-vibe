@@ -862,11 +862,11 @@ export function renderHtmlCard(profile, options = {}) {
 
     // Copy share link
     document.getElementById('copy-btn').addEventListener('click', () => {
-      navigator.clipboard.writeText('${shareUrl}').then(() => {
+      navigator.clipboard.writeText('${escapeHtml(shareUrl)}').then(() => {
         const btn = document.getElementById('copy-btn');
-        const original = btn.innerHTML;
-        btn.innerHTML = '<span>COPIED!</span>';
-        setTimeout(() => { btn.innerHTML = original; }, 2000);
+        const originalText = btn.textContent;
+        btn.textContent = 'COPIED!';
+        setTimeout(() => { btn.textContent = originalText; }, 2000);
       });
     });
 

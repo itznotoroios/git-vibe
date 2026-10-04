@@ -4,13 +4,17 @@ export function analyzeCommits(commits) {
   }
 
   const totalCommits = commits.length;
-  const author = commits[0].author;
+  const author = commits[0]?.author || 'unknown';
 
   let nightCommits = 0;
   const hourDistribution = {};
 
   commits.forEach((commit) => {
+    if (!commit?.date) return;
+    
     const date = new Date(commit.date);
+    if (isNaN(date.getTime())) return; // Skip invalid dates
+    
     const hour = date.getHours();
     const day = date.getDay();
 

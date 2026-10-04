@@ -815,9 +815,9 @@
     document.getElementById('copy-btn').addEventListener('click', () => {
       navigator.clipboard.writeText('https://git-vibe.dev/share#eyJhcmNoZXR5cGUiOiJUSEUgTk9DVFVSTkFMIEdSRU1MSU4iLCJyb2FzdCI6IkJybywgNTAlIG9mIHlvdXIgY29tbWl0cyBoYXBwZW4gYmV0d2VlbiAxMSBQTSBhbmQgNSBBTS4gWW91ciBjaXJjYWRpYW4gcmh5dGhtIGlzIGEgc3VnZ2VzdGlvbiwgbm90IGEgcnVsZS4iLCJ2aWJlU2NvcmUiOiI1MCUgTmlnaHQgLyA1MCUgRGF5IiwiZW1vamkiOiLwn6aJIiwidG90YWxDb21taXRzIjoxMCwibmlnaHRPd2xSYXRpbyI6MC41LCJwZWFrSG91ciI6MjN9').then(() => {
         const btn = document.getElementById('copy-btn');
-        const original = btn.innerHTML;
-        btn.innerHTML = '<span>COPIED!</span>';
-        setTimeout(() => { btn.innerHTML = original; }, 2000);
+        const originalText = btn.textContent;
+        btn.textContent = 'COPIED!';
+        setTimeout(() => { btn.textContent = originalText; }, 2000);
       });
     });
 
