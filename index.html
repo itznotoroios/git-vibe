@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>git-vibe — Your Developer Horoscope</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #F4F4F0;
+    --ink: #050505;
+    --red: #E61919;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .hero {
+    border: 3px solid var(--ink);
+    background-color: var(--bg);
+    padding: 40px;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 0;
+    right: 0;
+    height: 16px;
+    background-color: var(--red);
+  }
+
+  .tag {
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--bg);
+    background-color: var(--ink);
+    display: inline-block;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(48px, 10vw, 96px);
+    line-height: 0.85;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+  }
+
+  h1 .red { color: var(--red); }
+
+  .subtitle {
+    font-size: 18px;
+    line-height: 1.5;
+    max-width: 540px;
+    margin-bottom: 32px;
+    font-weight: 700;
+  }
+
+  .cta {
+    display: inline-block;
+    background-color: var(--red);
+    color: var(--bg);
+    padding: 16px 32px;
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    margin-bottom: 40px;
+  }
+
+  hr {
+    border: none;
+    border-top: 3px solid var(--ink);
+    margin: 32px 0;
+  }
+
+  .archetypes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .archetype-card {
+    border: 2px solid var(--ink);
+    padding: 16px;
+  }
+
+  .archetype-card h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .archetype-card .red { color: var(--red); }
+
+  .archetype-card p {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .footer {
+    margin-top: 32px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 600px) {
+    .archetypes { grid-template-columns: 1fr; }
+    .hero { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <div class="tag">// tactical telemetry</div>
+      <h1>YOUR GIT <span class="red">VIBE</span></h1>
+      <p class="subtitle">
+        What does your commit history say about you?
+        A zero-dependency, local-first CLI that parses your git log,
+        classifies your developer archetype, and generates a brutalist
+        ASCII card you can share instantly.
+      </p>
+      <a class="cta" href="https://github.com/">npx git-vibe</a>
+
+      <hr />
+
+      <div class="archetypes">
+        <div class="archetype-card">
+          <h3>🦉 NOCTURNAL <span class="red">GREMLIN</span></h3>
+          <p>Commits between 11 PM and 5 AM. You code like you're running from the cops.</p>
+        </div>
+        <div class="archetype-card">
+          <h3>🔧 CHAOTIC <span class="red">FIXER</span></h3>
+          <p>Rapid commits with "fix", "fml", and "please work". Trial-and-error panic.</p>
+        </div>
+        <div class="archetype-card">
+          <h3>📝 GIT-PHILOSOPHY <span class="red">MAJOR</span></h3>
+          <p>100-word commit messages. You treat git like a diary. Now write some code.</p>
+        </div>
+        <div class="archetype-card">
+          <h3>✂️ REFACTORING <span class="red">ASSASSIN</span></h3>
+          <pDeletes more code than you write. Elegant, but terrifying. Your team is scared of you.</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>© 2026 GIT-VIBE // ZERO DEPENDENCIES</span>
+        <span>LOCAL FIRST // NO OAUTH</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

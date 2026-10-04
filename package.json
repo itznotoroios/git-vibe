@@ -1,0 +1,31 @@
+{
+  "name": "git-vibe",
+  "version": "1.0.0",
+  "description": "Your developer horoscope & personality profile based on your real git history.",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "git-vibe": "./bin/index.js"
+  },
+  "scripts": {
+    "start": "node bin/index.js",
+    "test": "node --test tests/**/*.test.js",
+    "test:watch": "node --test --watch tests/**/*.test.js"
+  },
+  "keywords": [
+    "git",
+    "vibe",
+    "roast",
+    "horoscope",
+    "cli",
+    "developer",
+    "brutalist"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
