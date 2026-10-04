@@ -5,8 +5,8 @@
 
 /**
  * Generate a contribution heatmap grid.
- * @param {object} stats
- * @returns {string} HTML/CSS heatmap
+ stats
+ HTML/CSS heatmap
  */
 export function renderHeatmap(stats) {
   const { hourDistribution, totalCommits } = stats;
@@ -48,9 +48,9 @@ export function renderHeatmap(stats) {
 
 /**
  * Generate SVG contribution graph.
- * @param {object} stats
- * @param {object} options
- * @returns {string} SVG markup
+ stats
+ options
+ SVG markup
  */
 export function renderSvgHeatmap(stats, options = {}) {
   const { totalCommits, hourDistribution } = stats;
@@ -124,8 +124,8 @@ export function renderSvgHeatmap(stats, options = {}) {
 
 /**
  * Generate CSS-only heatmap bars.
- * @param {object} stats
- * @returns {string} HTML
+ stats
+ HTML
  */
 export function renderBarHeatmap(stats) {
   const { hourDistribution } = stats;

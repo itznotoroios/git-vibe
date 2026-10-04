@@ -6,12 +6,12 @@
 
 /**
  * Generates an SVG card string for a developer profile.
- * @param {{ archetype: string, roast: string, vibeScore: string, stats: object, github?: object }} profile
- * @param {object} options
- * @param {string} options.theme - Theme name (dark, light, neon, brutal)
- * @param {string} options.width - Card width in pixels
- * @param {string} options.height - Card height in pixels
- * @returns {string} SVG markup
+} profile
+ options
+ options.theme - Theme name (dark, light, neon, brutal)
+ options.width - Card width in pixels
+ options.height - Card height in pixels
+ SVG markup
  */
 export function renderSvgCard(profile, options = {}) {
   const {
@@ -151,9 +151,9 @@ export function renderSvgCard(profile, options = {}) {
 
 /**
  * Generates a mini SVG badge for inline embedding.
- * @param {object} stats
- * @param {string} theme
- * @returns {string} SVG markup
+ stats
+ theme
+ SVG markup
  */
 export function renderSvgBadge(stats, theme = 'brutal') {
   const author = stats?.author || 'unknown';
@@ -185,9 +185,9 @@ export function renderSvgBadge(stats, theme = 'brutal') {
 
 /**
  * Generates markdown embed code for a profile card.
- * @param {object} profile
- * @param {object} options
- * @returns {string} Markdown code
+ profile
+ options
+ Markdown code
  */
 export function generateEmbedCode(profile, options = {}) {
   const { theme = 'brutal', svgUrl = null } = options;
@@ -201,9 +201,9 @@ export function generateEmbedCode(profile, options = {}) {
 
 /**
  * Generates a full README section for a user's profile.
- * @param {object} profile
- * @param {object} options
- * @returns {string} Markdown content
+ profile
+ options
+ Markdown content
  */
 export function generateReadmeSection(profile, options = {}) {
   const { archetype, roast, vibeScore, stats } = profile;

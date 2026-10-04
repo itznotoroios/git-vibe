@@ -5,8 +5,8 @@
 
 /**
  * Export profile as JSON.
- * @param {object} profile
- * @returns {string} JSON string
+ profile
+ JSON string
  */
 export function exportJSON(profile) {
   return JSON.stringify({
@@ -29,8 +29,8 @@ export function exportJSON(profile) {
 
 /**
  * Export profile as Markdown for READMEs.
- * @param {object} profile
- * @returns {string} Markdown string
+ profile
+ Markdown string
  */
 export function exportMarkdown(profile) {
   const { archetype, emoji, vibeScore, roast, stats } = profile;
@@ -56,9 +56,9 @@ export function exportMarkdown(profile) {
 
 /**
  * Export profile as SVG badge.
- * @param {object} profile
- * @param {object} options
- * @returns {string} SVG markup
+ profile
+ options
+ SVG markup
  */
 export function exportSVGBadge(profile, options = {}) {
   const { archetype, emoji, vibeScore, stats } = profile;
@@ -94,8 +94,8 @@ export function exportSVGBadge(profile, options = {}) {
 
 /**
  * Export profile as terminal table.
- * @param {object} profile
- * @returns {string} Formatted table string
+ profile
+ Formatted table string
  */
 export function exportTerminalTable(profile) {
   const { archetype, emoji, vibeScore, roast, stats } = profile;
@@ -120,9 +120,9 @@ ${'═'.repeat(44)}
 
 /**
  * Auto-select best format based on context.
- * @param {object} profile
- * @param {string} format - 'json', 'md', 'svg', 'table', 'auto'
- * @returns {{ content: string, filename: string, mime: string }}
+ profile
+ format - 'json', 'md', 'svg', 'table', 'auto'
+}
  */
 export function exportProfile(profile, format = 'auto') {
   const formatMap = {

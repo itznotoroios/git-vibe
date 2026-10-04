@@ -5,8 +5,8 @@
 
 /**
  * Encodes profile data as base64 for URL sharing.
- * @param {object} profile
- * @returns {string}
+ profile
+
  */
 function encodeProfile(profile) {
   try {
@@ -27,9 +27,9 @@ function encodeProfile(profile) {
 
 /**
  * Generates an HTML card with animations and share features.
- * @param {object} profile
- * @param {object} options
- * @returns {string}
+ profile
+ options
+
  */
 export function renderHtmlCard(profile, options = {}) {
   const { theme = 'auto' } = options;

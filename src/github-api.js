@@ -7,8 +7,8 @@ const GITHUB_API = 'https://api.github.com';
 
 /**
  * Fetches public GitHub profile stats.
- * @param {string} username
- * @returns {Promise<object|null>} GitHub profile data or null if not found
+ username
+ GitHub profile data or null if not found
  */
 export async function fetchGithubStats(username) {
   try {
@@ -43,8 +43,8 @@ export async function fetchGithubStats(username) {
 
 /**
  * Fetches GitHub contribution data (limited without auth).
- * @param {string} username
- * @returns {Promise<object|null>}
+ username
+
  */
 export async function fetchGithubContributions(username) {
   try {
@@ -95,8 +95,8 @@ export async function fetchGithubContributions(username) {
 
 /**
  * Combines git history analysis with GitHub API data.
- * @param {{ totalCommits: number, author: string, nightOwlRatio: number, avgMessageLength: number, rapidCommitRatio: number, deletionAdditionRatio: number }} gitStats
- * @returns {Promise<object>} Combined profile data
+} gitStats
+ Combined profile data
  */
 export async function enrichWithGithubData(gitStats) {
   const github = await fetchGithubStats(gitStats.author);

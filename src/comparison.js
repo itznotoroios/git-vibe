@@ -5,9 +5,9 @@
 
 /**
  * Calculate similarity score between two profiles.
- * @param {object} profileA
- * @param {object} profileB
- * @returns {number} Similarity percentage
+ profileA
+ profileB
+ Similarity percentage
  */
 export function calculateSimilarity(profileA, profileB) {
   const scoreA = {
@@ -42,9 +42,9 @@ export function calculateSimilarity(profileA, profileB) {
 
 /**
  * Generate comparison report.
- * @param {object} profileA
- * @param {object} profileB
- * @returns {object} Comparison data
+ profileA
+ profileB
+ Comparison data
  */
 export function generateComparison(profileA, profileB) {
   const similarity = calculateSimilarity(profileA, profileB);
@@ -96,8 +96,8 @@ export function generateComparison(profileA, profileB) {
 
 /**
  * Render comparison as HTML.
- * @param {object} comparison
- * @returns {string} HTML string
+ comparison
+ HTML string
  */
 export function renderComparisonHtml(comparison) {
   const { similarity, relationship, diffs, profileA, profileB } = comparison;

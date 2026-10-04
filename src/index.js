@@ -22,13 +22,13 @@ const __dirname = dirname(__filename);
 
 /**
  * Runs the full git-vibe pipeline.
- * @param {object} options
- * @param {boolean} options.mock - Use mock commit data instead of real git logs
- * @param {string} options.outputDir - Directory to write output files to
- * @param {string} options.format - Output format: ascii, html, json, md, svg, table, all
- * @param {boolean} options.enhanced - Use LLM for enhanced roasts
- * @param {boolean} options.comparison - Generate comparison with sample profiles
- * @returns {{ profile: object, outputs: object }}
+ options
+ options.mock - Use mock commit data instead of real git logs
+ options.outputDir - Directory to write output files to
+ options.format - Output format: ascii, html, json, md, svg, table, all
+ options.enhanced - Use LLM for enhanced roasts
+ options.comparison - Generate comparison with sample profiles
+}
  */
 export async function runVibe({ 
   mock = false, 
@@ -152,7 +152,7 @@ export async function runVibe({
 
 /**
  * Generate mock commits for testing.
- * @returns {object[]}
+
  */
 function generateMockCommits() {
   return [
@@ -171,8 +171,8 @@ function generateMockCommits() {
 
 /**
  * Generate sample profiles for comparison.
- * @param {object} stats
- * @returns {object[]}
+ stats
+
  */
 function generateSampleProfiles(stats) {
   return [
