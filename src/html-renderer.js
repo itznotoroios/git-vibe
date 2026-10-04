@@ -474,7 +474,7 @@ export function renderHtmlCard(profile, options = {}) {
         <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(`Just ran npx git-vibe and got: ${archetype} ${emoji}\\n\\n${vibeScore}\\n\\n${shareUrl}`)}" target="_blank" class="btn primary">
           🐦 Tweet My Vibe
         </a>
-        <button class="btn secondary" onclick="copyShareLink()">
+        <button class="btn secondary" id="copy-btn">
           📋 Copy Link
         </button>
         <a href="./git-vibe-profile.html" download class="btn secondary">
@@ -532,11 +532,11 @@ export function renderHtmlCard(profile, options = {}) {
     }
 
     // Copy share link
-    function copyShareLink() {
+    document.getElementById('copy-btn').addEventListener('click', () => {
       navigator.clipboard.writeText('${shareUrl}').then(() => {
         alert('Link copied to clipboard!');
       });
-    }
+    });
 
     // Check for shared profile in URL
     const hash = window.location.hash;

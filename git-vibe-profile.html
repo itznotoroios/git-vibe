@@ -427,7 +427,7 @@
         <a href="https://twitter.com/intent/tweet?text=Just%20ran%20npx%20git-vibe%20and%20got%3A%20THE%20NOCTURNAL%20GREMLIN%20%F0%9F%A6%89%5Cn%5Cn50%25%20Night%20%2F%2050%25%20Day%5Cn%5Cnhttps%3A%2F%2Fgit-vibe.dev%2Fshare%23eyJhcmNoZXR5cGUiOiJUSEUgTk9DVFVSTkFMIEdSRU1MSU4iLCJyb2FzdCI6IkJybywgNTAlIG9mIHlvdXIgY29tbWl0cyBoYXBwZW4gYmV0d2VlbiAxMSBQTSBhbmQgNSBBTS4gWW91ciBjaXJjYWRpYW4gcmh5dGhtIGlzIGEgc3VnZ2VzdGlvbiwgbm90IGEgcnVsZS4iLCJ2aWJlU2NvcmUiOiI1MCUgTmlnaHQgLyA1MCUgRGF5IiwiZW1vamkiOiLwn6aJIiwidG90YWxDb21taXRzIjoxMCwibmlnaHRPd2xSYXRpbyI6MC41LCJwZWFrSG91ciI6MjN9" target="_blank" class="btn primary">
           🐦 Tweet My Vibe
         </a>
-        <button class="btn secondary" onclick="copyShareLink()">
+        <button class="btn secondary" id="copy-btn">
           📋 Copy Link
         </button>
         <a href="./git-vibe-profile.html" download class="btn secondary">
@@ -485,11 +485,11 @@
     }
 
     // Copy share link
-    function copyShareLink() {
+    document.getElementById('copy-btn').addEventListener('click', () => {
       navigator.clipboard.writeText('https://git-vibe.dev/share#eyJhcmNoZXR5cGUiOiJUSEUgTk9DVFVSTkFMIEdSRU1MSU4iLCJyb2FzdCI6IkJybywgNTAlIG9mIHlvdXIgY29tbWl0cyBoYXBwZW4gYmV0d2VlbiAxMSBQTSBhbmQgNSBBTS4gWW91ciBjaXJjYWRpYW4gcmh5dGhtIGlzIGEgc3VnZ2VzdGlvbiwgbm90IGEgcnVsZS4iLCJ2aWJlU2NvcmUiOiI1MCUgTmlnaHQgLyA1MCUgRGF5IiwiZW1vamkiOiLwn6aJIiwidG90YWxDb21taXRzIjoxMCwibmlnaHRPd2xSYXRpbyI6MC41LCJwZWFrSG91ciI6MjN9').then(() => {
         alert('Link copied to clipboard!');
       });
-    }
+    });
 
     // Check for shared profile in URL
     const hash = window.location.hash;
