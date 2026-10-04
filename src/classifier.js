@@ -1,13 +1,3 @@
-/**
- * classifier.js - Heuristic developer archetype classification and roast generation.
- * Enhanced with more archetypes and contextual roasts.
- */
-
-/**
- * Classifies developer commit stats into a developer archetype.
- * @param {object} stats
- * @returns {{ archetype: string, roast: string, vibeScore: string, emoji: string, subMetrics: object }}
- */
 export function classifyVibe(stats) {
   const {
     totalCommits,
@@ -21,7 +11,6 @@ export function classifyVibe(stats) {
     consistencyScore
   } = stats;
 
-  // Extended archetype definitions
   const archetypes = [
     {
       id: 'NOCTURNAL_GREMLIN',
@@ -95,8 +84,7 @@ export function classifyVibe(stats) {
     }
   ];
 
-  // Find matching archetype
-  let archetype = archetypes[archetypes.length - 1]; // Default
+  let archetype = archetypes[archetypes.length - 1];
   for (const apt of archetypes) {
     if (apt.trigger(stats)) {
       archetype = apt;
@@ -104,18 +92,17 @@ export function classifyVibe(stats) {
     }
   }
 
-  // Calculate vibe score
   let vibeScore;
   if (archetype.id === 'NOCTURNAL_GREMLIN') {
     vibeScore = `${Math.round(stats.nightOwlRatio * 100)}% Night / ${Math.round((1 - stats.nightOwlRatio) * 100)}% Day`;
   } else if (archetype.id === 'CHAOTIC_FIXER') {
-    vibeScore = `${Math.round(stats.rapidCommitRatio * 100)}% Chaos / ${Math.round((1 - stats.rapidCommitRatio) * 100)}% Control`;
+    vibeScore = `${Math.round(stats.rapidCommitRatio * 100)}% Panic / ${Math.round((1 - stats.rapidCommitRatio) * 100)}% Chill`;
   } else if (archetype.id === 'WEEKEND_WARRIOR') {
     vibeScore = `${Math.round(stats.weekendRatio * 100)}% Weekend / Workaholic`;
   } else if (archetype.id === 'GIT_PHILOSOPHER') {
-    vibeScore = `${Math.round(stats.avgMessageLength)} char avg / Essayist`;
+    vibeScore = `${Math.round(stats.avgMessageLength)} chars avg / Essayist`;
   } else if (archetype.id === 'REFACTORING_ASSASSIN') {
-    vibeScore = `${stats.deletionAdditionRatio.toFixed(1)}x Delete / Minimalist`;
+    vibeScore = `${stats.deletionAdditionRatio.toFixed(1)}x Deletion / Minimalist`;
   } else if (archetype.id === 'MORNING_LARK') {
     vibeScore = `Peak: ${stats.peakHour}:00 / Early Bird`;
   } else if (archetype.id === 'FEATURE_FACTORY') {
@@ -126,7 +113,6 @@ export function classifyVibe(stats) {
     vibeScore = '50% Stability / 50% Predictable';
   }
 
-  // Generate roast
   const roast = archetype.roast(stats);
 
   return {

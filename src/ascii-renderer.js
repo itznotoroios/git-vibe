@@ -1,9 +1,3 @@
-/**
- * ascii-renderer.js - Terminal ASCII art card formatter.
- * Now includes contribution heatmap and progress bars.
- */
-
-// ANSI escape codes for high-contrast terminal output
 const ANSI = {
   RESET: '\x1b[0m',
   BOLD: '\x1b[1m',
@@ -18,23 +12,12 @@ const ANSI = {
   BG_YELLOW: '\x1b[43m'
 };
 
-/**
- * Renders a contribution heatmap bar.
- * @param {number} value - 0-100 percentage
- * @param {string} color - ANSI color code
- * @returns {string}
- */
 function heatBar(value, color) {
   const filled = Math.round(value / 5);
   const empty = 20 - filled;
   return color + '█'.repeat(filled) + ANSI.RESET + '░'.repeat(empty);
 }
 
-/**
- * Renders a brutalist ASCII card in the terminal.
- * @param {{ archetype: string, roast: string, vibeScore: string, stats: object, subMetrics?: object }} profile
- * @returns {string}
- */
 export function renderAsciiCard(profile) {
   const { archetype, roast, vibeScore, stats, subMetrics } = profile;
   const { totalCommits, nightOwlRatio, author, peakHour, messageTypes } = stats;
@@ -52,19 +35,15 @@ export function renderAsciiCard(profile) {
 
   const lines = [];
 
-  // Header
   lines.push(`${ANSI.BOLD}${ANSI.BG_RED}${ANSI.WHITE}  GIT-VIBE CARD: @${author} ${profile.emoji || '📊'}  ${ANSI.RESET}`);
   lines.push(horizontalBorder);
 
-  // Archetype
   lines.push(`${ANSI.BOLD}${ANSI.RED}  ARCHETYPE:${ANSI.RESET} ${ANSI.BOLD}${archetype}${ANSI.RESET}`);
   lines.push('');
 
-  // Vibe Score
   lines.push(`${ANSI.YELLOW}  VIBE SCORE: ${ANSI.RESET}${vibeScore}`);
   lines.push(midBorder);
 
-  // Stats breakdown
   const nightPct = Math.round(nightOwlRatio * 100);
   const consistencyPct = Math.round(subMetrics?.consistencyScore || 50);
 
@@ -74,14 +53,13 @@ export function renderAsciiCard(profile) {
   lines.push(`${ANSI.CYAN}  ${ANSI.RESET} Consistency:     ${heatBar(consistencyPct, ANSI.GREEN)} ${consistencyPct}%`);
   lines.push('');
 
-  // Message type breakdown
   if (messageTypes) {
     lines.push(`${ANSI.YELLOW}  MESSAGE TYPES:${ANSI.RESET}`);
     Object.entries(messageTypes).forEach(([type, count]) => {
       if (count > 0) {
         const pct = Math.round((count / totalCommits) * 100);
-        const color = type === 'fix' ? ANSI.RED : 
-                      type === 'feat' ? ANSI.GREEN : 
+        const color = type === 'fix' ? ANSI.RED :
+                      type === 'feat' ? ANSI.GREEN :
                       type === 'refactor' ? ANSI.YELLOW : ANSI.WHITE;
         lines.push(`${color}    ${type.padEnd(10)}${ANSI.RESET} ${heatBar(pct, color)} ${pct}%`);
       }
@@ -89,11 +67,9 @@ export function renderAsciiCard(profile) {
     lines.push('');
   }
 
-  // Roast
   lines.push(`${ANSI.GREEN}  "${roast}"${ANSI.RESET}`);
   lines.push('');
 
-  // Commit suggestions (if available)
   if (subMetrics?.commitSuggestions?.length) {
     lines.push(`${ANSI.CYAN}  SUGGESTED COMMITS:${ANSI.RESET}`);
     subMetrics.commitSuggestions.slice(0, 3).forEach((msg, i) => {
@@ -102,20 +78,14 @@ export function renderAsciiCard(profile) {
     lines.push('');
   }
 
-  // Footer
   lines.push(bottomBorder);
   lines.push(`${ANSI.YELLOW}  Share your Vibe: https://git-vibe.dev/share${ANSI.RESET}`);
 
   return lines.join('\n');
 }
 
-/**
- * Renders plain ASCII card without ANSI codes (for file output).
- * @param {{ archetype: string, roast: string, vibeScore: string, stats: object, subMetrics?: object }} profile
- * @returns {string}
- */
 export function renderPlainAsciiCard(profile) {
-  const { archetype, roast, vibeScore, stats, subMetrics } = profile;
+  const { archetype, roast, vibeScore, stats } = profile;
   const { totalCommits, nightOwlRatio, author, peakHour } = stats;
 
   const border = '═';

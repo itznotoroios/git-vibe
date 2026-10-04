@@ -1,18 +1,7 @@
-/**
- * llm-roaster.js - LLM-enhanced roast generation using free LLM API.
- * Creates contextually smarter, funnier roasts based on developer archetype.
- */
-
 const LLM_API_URL = process.env.LLM_API_URL || null;
 const LLM_API_KEY = process.env.LLM_API_KEY || null;
 const LLM_MODEL = process.env.LLM_MODEL || 'auto';
 
-/**
- * Generates an enhanced roast using LLM.
- * @param {object} stats
- * @param {string} archetype
- * @returns {Promise<string>} Enhanced roast text
- */
 export async function generateEnhancedRoast(stats, archetype) {
   const { totalCommits, nightOwlRatio, avgMessageLength, rapidCommitRatio, peakHour } = stats;
 
@@ -36,7 +25,7 @@ Generate a savage roast:`;
         'Authorization': `Bearer ${LLM_API_KEY}`
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: LLM_MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
@@ -64,12 +53,6 @@ Generate a savage roast:`;
   }
 }
 
-/**
- * Generates commit message suggestions based on archetype.
- * @param {object} stats
- * @param {string} archetype
- * @returns {string[]} Array of suggested commit messages
- */
 export function suggestCommitMessages(stats, archetype) {
   const suggestions = {
     'THE NOCTURNAL GREMLIN': [
@@ -78,7 +61,7 @@ export function suggestCommitMessages(stats, archetype) {
       'refactor: circadian rhythm removal',
       'chore: caffeine dependency injection'
     ],
-    'THE CHAOTIC FIXER': [
+    'THE CHAOTIC_FIXER': [
       'fix: please work this time',
       'wip: desperate attempt at code',
       'fix: reverted everything again',
@@ -118,11 +101,7 @@ export function suggestCommitMessages(stats, archetype) {
   ];
 }
 
-/**
- * Determines if LLM should be used for roasting.
- * @returns {boolean}
- */
 export function shouldUseLLM() {
-  return process.env.GIT_VIBE_USE_LLM === 'true' || 
+  return process.env.GIT_VIBE_USE_LLM === 'true' ||
          process.env.LLM_API_KEY;
 }
