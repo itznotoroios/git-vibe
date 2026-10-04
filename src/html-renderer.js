@@ -3,6 +3,16 @@
  * Features: animated roast, heatmap, shareable URLs, dark/light mode.
  */
 
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 /**
  * Encodes profile data as base64 for URL sharing.
  profile
@@ -419,16 +429,16 @@ export function renderHtmlCard(profile, options = {}) {
 
     <div class="content">
       <div class="author-badge">
-        <span class="emoji">${emoji}</span>
-        <span class="name">@${author} // GIT-VIBE</span>
+        <span class="emoji">${escapeHtml(emoji)}</span>
+        <span class="name">@${escapeHtml(author)} // GIT-VIBE</span>
       </div>
 
       <div class="archetype-title">
-        ${archetype.replace(/[-\s]+/g, '<span class="red"> </span>')}
+        ${escapeHtml(archetype).replace(/[-\s]+/g, '<span class="red"> </span>')}
       </div>
 
       <div class="vibe-score">
-        VIBE SCORE: ${vibeScore}
+        VIBE SCORE: ${escapeHtml(vibeScore)}
       </div>
 
       <div class="stats-grid">

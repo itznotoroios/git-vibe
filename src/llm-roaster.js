@@ -1,6 +1,7 @@
 const LLM_API_URL = process.env.LLM_API_URL || null;
 const LLM_API_KEY = process.env.LLM_API_KEY || null;
 const LLM_MODEL = process.env.LLM_MODEL || 'auto';
+const LLM_TIMEOUT_MS = 5000;
 
 export async function generateEnhancedRoast(stats, archetype) {
   const { totalCommits, nightOwlRatio, avgMessageLength, rapidCommitRatio, peakHour } = stats;
@@ -18,6 +19,9 @@ export async function generateEnhancedRoast(stats, archetype) {
 Generate a savage roast:`;
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
+
     const response = await fetch(`${LLM_API_URL}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -32,8 +36,11 @@ Generate a savage roast:`;
         ],
         max_tokens: 80,
         temperature: 0.9
-      })
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`LLM API error: ${response.status}`);
