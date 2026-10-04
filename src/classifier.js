@@ -1,12 +1,12 @@
 /**
  * classifier.js - Heuristic developer archetype classification and roast generation.
- * Enhanced with more archetypes and better roasts.
+ * Enhanced with more archetypes and contextual roasts.
  */
 
 /**
  * Classifies developer commit stats into a developer archetype.
- * @param {{ totalCommits: number, author: string, nightOwlRatio: number, avgMessageLength: number, rapidCommitRatio: number, deletionAdditionRatio: number }} stats
- * @returns {{ archetype: string, roast: string, vibeScore: string, emoji: string }}
+ * @param {object} stats
+ * @returns {{ archetype: string, roast: string, vibeScore: string, emoji: string, subMetrics: object }}
  */
 export function classifyVibe(stats) {
   const {
@@ -14,109 +14,132 @@ export function classifyVibe(stats) {
     nightOwlRatio,
     avgMessageLength,
     rapidCommitRatio,
-    deletionAdditionRatio
+    deletionAdditionRatio,
+    peakHour,
+    mostCommonType,
+    weekendRatio,
+    consistencyScore
   } = stats;
 
-  // Archetype definitions with thresholds
+  // Extended archetype definitions
   const archetypes = [
     {
       id: 'NOCTURNAL_GREMLIN',
       name: 'THE NOCTURNAL GREMLIN',
       emoji: '🦉',
-      minNightOwl: 0.40,
-      minCommits: 10,
-      roast: (ratio) => `Bro, ${Math.round(ratio * 100)}% of your commits happen between 11 PM and 5 AM. You code like you're running from the cops. Go to sleep, bro.`
+      trigger: (s) => s.nightOwlRatio >= 0.40 && s.totalCommits >= 10,
+      roast: (s) => `Bro, ${Math.round(s.nightOwlRatio * 100)}% of your commits happen between 11 PM and 5 AM. Your circadian rhythm is a suggestion, not a rule.`
     },
     {
       id: 'CHAOTIC_FIXER',
       name: 'THE CHAOTIC FIXER',
       emoji: '🔥',
-      minRapidRatio: 0.35,
-      minCommits: 10,
-      roast: (ratio) => `You commit every 3 minutes with messages like "fix", "please work", and "fml". You're not debugging code, you're playing Russian roulette with a compiler.`
+      trigger: (s) => s.rapidCommitRatio >= 0.35 && s.totalCommits >= 10,
+      roast: (s) => `You commit every 3 minutes with "fix", "fml", "please work". You're not debugging code, you're playing compiler roulette.`
     },
     {
       id: 'GIT_PHILOSOPHER',
       name: 'THE GIT-PHILOSOPHY MAJOR',
       emoji: '📝',
-      minMsgLength: 70,
-      minCommits: 5,
-      roast: (length) => `Your commit messages are longer than my entire resume (${length} chars avg). You treat git like a diary. We get it, you're a poet. Now write some actual code.`
+      trigger: (s) => s.avgMessageLength >= 70 && s.totalCommits >= 5,
+      roast: (s) => `Your commit messages average ${Math.round(s.avgMessageLength)} characters. You treat git like a diary. We get it, you're a poet.`
     },
     {
       id: 'REFACTORING_ASSASSIN',
       name: 'THE REFACTORING ASSASSIN',
       emoji: '✂️',
-      minDeletionRatio: 1.8,
-      minCommits: 10,
-      roast: (ratio) => `You delete ${ratio.toFixed(1)}x more code than you write. You're not a developer, you're a digital minimalist artist. Elegant, but terrifying. Your team is scared of you.`
+      trigger: (s) => s.deletionAdditionRatio >= 1.8 && s.totalCommits >= 10,
+      roast: (s) => `You delete ${s.deletionAdditionRatio.toFixed(1)}x more code than you write. Digital minimalist artist. Elegant, but terrifying.`
+    },
+    {
+      id: 'WEEKEND_WARRIOR',
+      name: 'THE WEEKEND WARRIOR',
+      emoji: '🎯',
+      trigger: (s) => s.weekendRatio >= 0.40 && s.totalCommits >= 10,
+      roast: (s) => `${Math.round(s.weekendRatio * 100)}% of your commits happen on weekends. Work-life balance? Never heard of her.`
+    },
+    {
+      id: 'MORNING_LARK',
+      name: 'THE MORNING LARK',
+      emoji: '🌅',
+      trigger: (s) => s.peakHour >= 6 && s.peakHour <= 11 && s.totalCommits >= 10,
+      roast: (s) => `Your peak coding hour is ${s.peakHour}:00. You wake up before the sun and ship before breakfast. Respect.`
     },
     {
       id: 'APRENTICE_BOOTCAMPER',
       name: 'THE APPRENTICE BOOTCAMPER',
       emoji: '🌱',
-      maxCommits: 20,
-      roast: () => `You only have ${totalCommits} commits. This repo is a ghost town. Write some real code before asking for a vibe check.`
+      trigger: (s) => s.totalCommits < 20,
+      roast: () => `Only ${totalCommits} commits? This repo is a ghost town. Write some code first, then come back.`
+    },
+    {
+      id: 'FEATURE_FACTORY',
+      name: 'THE FEATURE FACTORY',
+      emoji: '🏭',
+      trigger: (s) => s.mostCommonType === 'feat' && s.totalCommits >= 10,
+      roast: (s) => `Every commit is "feat:" like you're building a product catalog. Ship it, ship it good.`
+    },
+    {
+      id: 'BUG_HUNTER',
+      name: 'THE BUG HUNTER',
+      emoji: '🐛',
+      trigger: (s) => s.mostCommonType === 'fix' && s.totalCommits >= 10,
+      roast: (s) => `${s.messageTypes.fix} bug fixes and counting. You're not writing features, you're running a pest control service.`
     },
     {
       id: 'STABLE_HAND',
       name: 'THE STABLE HAND',
       emoji: '🐴',
-      default: true,
-      roast: () => `You code like a robot. Reliable, consistent, and slightly boring. You're the backbone of every team. Just don't tell anyone you use AI to write your commit messages.`
+      trigger: () => true,
+      roast: () => `You code like a robot. Reliable, consistent, slightly boring. The backbone of every team. Just don't tell anyone.`
     }
   ];
 
-  let archetype = archetypes[5]; // Default: Stable Hand
-
-  // Classification logic
-  if (nightOwlRatio >= 0.40 && totalCommits >= 10) {
-    archetype = archetypes[0];
-  } else if (rapidCommitRatio >= 0.35 && totalCommits >= 10) {
-    archetype = archetypes[1];
-  } else if (avgMessageLength >= 70 && totalCommits >= 5) {
-    archetype = archetypes[2];
-  } else if (deletionAdditionRatio >= 1.8 && totalCommits >= 10) {
-    archetype = archetypes[3];
-  } else if (totalCommits < 20) {
-    archetype = archetypes[4];
+  // Find matching archetype
+  let archetype = archetypes[archetypes.length - 1]; // Default
+  for (const apt of archetypes) {
+    if (apt.trigger(stats)) {
+      archetype = apt;
+      break;
+    }
   }
 
   // Calculate vibe score
   let vibeScore;
   if (archetype.id === 'NOCTURNAL_GREMLIN') {
-    vibeScore = `${Math.round(nightOwlRatio * 100)}% Night Owl / ${Math.round((1 - nightOwlRatio) * 100)}% Day Walker`;
+    vibeScore = `${Math.round(stats.nightOwlRatio * 100)}% Night / ${Math.round((1 - stats.nightOwlRatio) * 100)}% Day`;
   } else if (archetype.id === 'CHAOTIC_FIXER') {
-    vibeScore = `${Math.round(rapidCommitRatio * 100)}% Panic / ${Math.round((1 - rapidCommitRatio) * 100)}% Chill`;
+    vibeScore = `${Math.round(stats.rapidCommitRatio * 100)}% Chaos / ${Math.round((1 - stats.rapidCommitRatio) * 100)}% Control`;
+  } else if (archetype.id === 'WEEKEND_WARRIOR') {
+    vibeScore = `${Math.round(stats.weekendRatio * 100)}% Weekend / Workaholic`;
   } else if (archetype.id === 'GIT_PHILOSOPHER') {
-    vibeScore = `${Math.round(avgMessageLength)} chars avg / Essayist`;
+    vibeScore = `${Math.round(stats.avgMessageLength)} char avg / Essayist`;
   } else if (archetype.id === 'REFACTORING_ASSASSIN') {
-    vibeScore = `${deletionAdditionRatio.toFixed(1)}x Deletion / Lethal`;
-  } else if (archetype.id === 'APRENTICE_BOOTCAMPER') {
-    vibeScore = `${totalCommits} commits / Novice`;
+    vibeScore = `${stats.deletionAdditionRatio.toFixed(1)}x Delete / Minimalist`;
+  } else if (archetype.id === 'MORNING_LARK') {
+    vibeScore = `Peak: ${stats.peakHour}:00 / Early Bird`;
+  } else if (archetype.id === 'FEATURE_FACTORY') {
+    vibeScore = `${stats.messageTypes.feat} features / Factory Line`;
+  } else if (archetype.id === 'BUG_HUNTER') {
+    vibeScore = `${stats.messageTypes.fix} bugs / Pest Control`;
   } else {
     vibeScore = '50% Stability / 50% Predictable';
   }
 
   // Generate roast
-  let roast;
-  if (archetype.id === 'NOCTURNAL_GREMLIN') {
-    roast = archetype.roast(nightOwlRatio);
-  } else if (archetype.id === 'CHAOTIC_FIXER') {
-    roast = archetype.roast(rapidCommitRatio);
-  } else if (archetype.id === 'GIT_PHILOSOPHER') {
-    roast = archetype.roast(avgMessageLength);
-  } else if (archetype.id === 'REFACTORING_ASSASSIN') {
-    roast = archetype.roast(deletionAdditionRatio);
-  } else {
-    roast = archetype.roast();
-  }
+  const roast = archetype.roast(stats);
 
   return {
     archetype: archetype.name,
     roast,
     vibeScore,
     emoji: archetype.emoji,
-    stats
+    stats,
+    subMetrics: {
+      peakHour: stats.peakHour,
+      mostCommonType: stats.mostCommonType,
+      consistencyScore: Math.round(stats.consistencyScore),
+      messageTypes: stats.messageTypes
+    }
   };
 }
