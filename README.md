@@ -1,60 +1,119 @@
+<div align="center">
+
 # git-vibe
 
-**Your developer horoscope & personality profile based on your real git history.**
+### Your Developer Horoscope — Powered by Your Git History
 
-> *What's your coding vibe?*
+**What's your coding vibe?** Analyze your commit patterns, discover your developer archetype, and get brutally roasted. Zero dependencies. Zero tracking. 100% local.
 
-`git-vibe` is a **zero-dependency, local-first** Node.js CLI tool that parses your local git commit history and classifies your developer archetype. It outputs brutalist ASCII cards in your terminal and generates shareable HTML profiles.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Node.js >= 18](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-brightgreen.svg?style=flat-square)](https://nodejs.org)
+[![Tests](https://img.shields.io/badge/tests-18_passing-brightgreen.svg?style=flat-square)](#)
+[![Dependencies](https://img.shields.io/badge/dependencies-0-zero.svg?style=flat-square)](#)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](#contributing)
 
-**No OAuth. No cloud databases. No server-side compute.** Everything runs 100% locally.
+**[View Demo](#-demo)** · **[Features](#-features)** · **[Installation](#-installation)** · **[Contributing](#-contributing)**
 
----
-
-## ✨ v1.1 Features
-
-- 🦉 **10+ Developer Archetypes** — Nocturnal Gremlin, Chaotic Fixer, Git-Philosophy Major, Refactoring Assassin, Weekend Warrior, Morning Lark, Feature Factory, Bug Hunter, and more
-- 📊 **24-Hour Activity Heatmap** — Visual bar chart showing your peak coding hours
-- 📝 **Contextual Roasts** — Smart, personalized burns based on your actual commit patterns
-- 🎨 **Multi-Format Exports** — JSON, Markdown, SVG badges, terminal tables
-- 🤖 **LLM Enhancement** — Optional AI-powered roasts via free LLM API
-- 💡 **Commit Suggestions** — Get funny commit message ideas based on your archetype
-- 🌙 **Dark/Light Theme Toggle** — Beautiful HTML cards with CRT scanline effects
-- 📱 **Shareable URLs** — Base64-encoded profiles for cross-device sharing
-- ⌨️ **Typing Animation** — Roast text appears letter-by-letter
-- 🔗 **One-Click Tweet** — Share your vibe directly to Twitter/X
+</div>
 
 ---
 
-## 🚀 Quick Start
+## 👀 Demo
+
+<div align="center">
+
+```
+╔══════════════════════════════════════════════╗
+║  GIT-VIBE CARD: @rihan 🦉                   ║
+╠══════════════════════════════════════════════╣
+║  ARCHETYPE: THE NOCTURNAL GREMLIN            ║
+║                                              ║
+║  VIBE SCORE: 50% Night / 50% Day             ║
+├──────────────────────────────────────────────┤
+║   Total Commits:   10                        ║
+║   Night Owl:       ██████████░░░░░░░░░░ 50%  ║
+║   Peak Hour:       23:00                     ║
+║   Consistency:     █████████████████░░░ 84%  ║
+║                                              ║
+║  MESSAGE TYPES:                              ║
+║    fix        ████████░░░░░░░░░░░░ 40%       ║
+║    feat       ████░░░░░░░░░░░░░░░░ 20%       ║
+║    refactor   ██████░░░░░░░░░░░░░░ 30%       ║
+║                                              ║
+║  "Bro, 50% of your commits happen between    ║
+║   11 PM and 5 AM. Your circadian rhythm is   ║
+║   a suggestion, not a rule."                 ║
+║                                              ║
+║  SUGGESTED COMMITS:                          ║
+║    1. fix: sleep schedule (still broken)     ║
+║    2. feat: midnight snack dispenser         ║
+║    3. refactor: circadian rhythm removal     ║
+╚══════════════════════════════════════════════╝
+```
+
+</div>
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🦉 **10+ Archetypes** | Nocturnal Gremlin, Chaotic Fixer, Git-Philosopher, Refactoring Assassin & more |
+| 📊 **Activity Heatmap** | Visual 24-hour breakdown showing your peak coding hours |
+| 📝 **Message Analytics** | Color-coded breakdown: fix (red), feat (green), refactor (yellow) |
+| 💡 **Smart Suggestions** | Context-aware commit message ideas based on your archetype |
+| 🤖 **LLM Roasts** | Optional AI-powered savage burns via free LLM API |
+| 🌙 **Theme Toggle** | Dark/light mode with CRT scanline effects |
+| 📱 **Shareable Profiles** | Base64-encoded URLs for cross-device sharing |
+| 🐦 **One-Click Tweet** | Share your vibe directly to Twitter/X |
+| 📦 **Multi-Format Export** | JSON, Markdown, SVG badges, terminal tables |
+| ⚡ **Zero Dependencies** | Pure Node.js — installs in <2 seconds via `npx` |
+| 🔒 **Privacy First** | No OAuth, no cloud databases, no server-side compute |
+| 🧪 **18 Tests** | TDD workflow, all tests passing |
+
+---
+
+## 🚀 Installation
+
+### Quick Start (Recommended)
 
 ```bash
-# Run directly with npx (recommended)
+# Run directly with npx — no install needed
 npx git-vibe
 
-# Or install globally
+# Or analyze a specific repo
+cd ~/your-project && npx git-vibe
+```
+
+### Global Install
+
+```bash
+# Install globally
 npm install -g git-vibe
+
+# Run anywhere
 git-vibe
 ```
+
+### Requirements
+
+- **Node.js** >= 18.0.0
+- A **git repository** with at least 5 commits
+- **No external dependencies** — works offline
 
 ---
 
 ## 📖 Usage
 
+### Basic Commands
+
 ```bash
 # Analyze current repository
 git-vibe
 
-# Use mock data for testing
+# Use mock data (great for testing)
 git-vibe --mock
-
-# Export as JSON only
-git-vibe --format json
-
-# Export all formats
-git-vibe --format all
-
-# Use LLM for enhanced roasts
-git-vibe --enhanced
 
 # Show help
 git-vibe --help
@@ -62,15 +121,37 @@ git-vibe --help
 
 ### Output Formats
 
-| Flag | Description |
-|------|-------------|
-| `--format all` | ASCII + HTML + JSON + Markdown + SVG (default) |
-| `--format ascii` | Terminal ASCII card only |
-| `--format html` | Standalone HTML profile |
-| `--format json` | JSON data export |
-| `--format md` | Markdown for READMEs |
-| `--format svg` | SVG badge for embeds |
-| `--format table` | Formatted terminal table |
+```bash
+# All formats (default)
+git-vibe --format all
+
+# Specific formats
+git-vibe --format ascii   # Terminal ASCII card
+git-vibe --format html    # Standalone HTML profile
+git-vibe --format json    # JSON data export
+git-vibe --format md      # Markdown for READMEs
+git-vibe --format svg     # SVG badge for embeds
+git-vibe --format table   # Formatted terminal table
+```
+
+### Enhanced Mode (LLM)
+
+```bash
+# Enable AI-powered roasts
+GIT_VIBE_USE_LLM=true git-vibe --enhanced
+
+# Custom API endpoint
+GIT_VIBE_USE_LLM=true JARVIS_API_URL=http://your-api/v1 git-vibe --enhanced
+```
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GIT_VIBE_USE_LLM` | `false` | Enable LLM-enhanced roasts |
+| `JARVIS_API_KEY` | — | Your free LLM API key |
+| `JARVIS_API_URL` | `http://127.0.0.1:31415/v1` | API endpoint |
+| `JARVIS_MODEL` | `auto` | Model to use |
 
 ---
 
@@ -91,54 +172,54 @@ git-vibe --help
 
 ---
 
-## 🎨 Terminal Output Example
+## 🛠️ Tech Stack
 
-```
-╔══════════════════════════════════════════════╗
-  GIT-VIBE CARD: @rihan 🦉
-  ARCHETYPE: THE NOCTURNAL GREMLIN
-
-  VIBE SCORE: 50% Night / 50% Day
-├──────────────────────────────────────────┤
-   Total Commits:   10
-   Night Owl:       ██████████░░░░░░░░░░ 50%
-   Peak Hour:       23:00
-   Consistency:     █████████████████░░░ 84%
-
-  MESSAGE TYPES:
-    fix        ████████░░░░░░░░░░░░ 40%
-    feat       ████░░░░░░░░░░░░░░░░ 20%
-    refactor   ██████░░░░░░░░░░░░░░ 30%
-
-  "Bro, 50% of your commits happen between 11 PM and 5 AM."
-
-  SUGGESTED COMMITS:
-    1. fix: sleep schedule (still broken)
-    2. feat: midnight snack dispenser
-    3. refactor: circadian rhythm removal
-╚══════════════════════════════════════════════╝
-```
+| Technology | Purpose |
+|------------|---------|
+| **Node.js** >= 18 | Runtime environment |
+| **JavaScript (ESM)** | Primary language |
+| **node:test** | Built-in test framework |
+| **node:assert** | Assertion library |
+| **node:child_process** | Git command execution |
+| **node:fs** | File system operations |
+| **node:path** | Path utilities |
+| **CSS3** | Industrial Brutalist styling |
+| **SVG** | Badge/card generation |
+| **Git** | Commit history parsing |
 
 ---
 
-## 📦 Project Structure
+## 📁 Project Structure
 
 ```
 git-vibe/
-├── bin/index.js              # CLI entry point
+├── bin/
+│   └── index.js              # CLI entry point
 ├── src/
 │   ├── git.js                # Git log parser
-│   ├── analyzer.js           # Metrics engine
+│   ├── analyzer.js           # Metrics engine (10+ stats)
 │   ├── classifier.js         # Archetype classification
 │   ├── ascii-renderer.js     # Terminal ASCII output
 │   ├── html-renderer.js      # Animated HTML cards
 │   ├── svg-renderer.js       # SVG badge generator
+│   ├── heatmap-renderer.js   # Contribution heatmap
+│   ├── comparison.js         # Developer comparison engine
 │   ├── llm-roaster.js        # AI-powered roasts
 │   ├── output-formatters.js  # Multi-format exports
 │   └── github-api.js         # GitHub stats fetcher
-├── tests/                    # 13 unit tests (TDD)
+├── tests/
+│   ├── git.test.js           # Parser tests
+│   ├── analyzer.test.js      # Analysis tests
+│   ├── classifier.test.js    # Classification tests
+│   └── comparison.test.js    # Comparison tests
+├── docs/
+│   └── superpowers/
+│       └── specs/
+│           └── 2026-10-04-git-vibe-design.md
 ├── index.html                # Landing page
-└── README.md                 # This file
+├── package.json              # Project metadata
+├── README.md                 # This file
+└── LICENSE                   # MIT License
 ```
 
 ---
@@ -151,20 +232,12 @@ npm test
 
 # Run in watch mode
 npm test -- --watch
+
+# Test specific file
+node --test tests/classifier.test.js
 ```
 
-**Result:** 13 tests, 13 pass, 0 fail
-
----
-
-## 🔧 Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `GIT_VIBE_USE_LLM` | `false` | Enable LLM-enhanced roasts |
-| `JARVIS_API_KEY` | - | Your free LLM API key |
-| `JARVIS_API_URL` | `http://127.0.0.1:31415/v1` | API endpoint |
-| `JARVIS_MODEL` | `auto` | Model to use |
+**Test Coverage:** 18 tests, 18 passing, 0 failing
 
 ---
 
@@ -172,19 +245,71 @@ npm test -- --watch
 
 Built with **Industrial Brutalist / Tactical Telemetry** aesthetics:
 
-- **Fonts:** Anton (headers) + JetBrains Mono (body)
-- **Colors:**
-  - Background: `#F4F4F0` (unbleached paper)
-  - Ink: `#050505` (carbon)
-  - Accent: `#E61919` (hazard red)
-- **Style:** Rigid grids, zero border-radius, uppercase labels, visible borders
+```css
+/* Color Palette */
+--bg: #F4F4F0          /* Unbleached paper */
+--ink: #050505         /* Carbon black */
+--red: #E61919         /* Hazard red */
+--green: #4AF626       /* Terminal green */
+--yellow: #FFD700      /* Warning yellow */
+
+/* Typography */
+Font: Anton (headers) + JetBrains Mono (body)
+
+/* Style Rules */
+- Zero border-radius (rigid grids)
+- Uppercase labels
+- Visible borders (2px solid)
+- Extreme type scale contrast
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. **Fork the repository**
+2. **Create your branch**: `git checkout -b feature/amazing-feature`
+3. **Commit your changes**: `git commit -m 'feat: add amazing feature'`
+4. **Push to the branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
+
+### Development Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/itznotoroios/git-vibe.git
+cd git-vibe
+
+# Run tests
+npm test
+
+# Run in dev mode
+npm run dev
+```
+
+### Code Style
+
+- Use ES Modules (`import/export`)
+- Follow existing naming conventions
+- Add tests for new features
+- Keep zero dependencies
 
 ---
 
 ## 📄 License
 
-MIT — built by a developer, for developers.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+Built with ⚡ and zero dependencies.
 
 ---
 
-*Generated with ⚡ and zero dependencies*
+<div align="center">
+
+### Found this useful? ⭐ Star the repo!
+
+**Share your vibe:** Run `npx git-vibe` and post your results on Twitter/X with `@gitvibedev`
+
+</div>
