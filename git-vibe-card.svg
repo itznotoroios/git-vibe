@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="280" viewBox="0 0 560 280">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;700&display=swap');
+      .bg { fill: #F4F4F0; }
+      .fg { fill: #050505; }
+      .accent { fill: #E61919; }
+      .border { stroke: #050505; stroke-width: 3; fill: none; }
+      .header { font-family: Anton, sans-serif; font-size: 14px; fill: #F4F4F0; fill-opacity: 1; }
+      .title { font-family: Anton, sans-serif; font-size: 42px; font-weight: bold; fill: #050505; letter-spacing: -1px; }
+      .subtitle { font-family: JetBrains Mono, monospace; font-size: 12px; fill: #050505; letter-spacing: 2px; text-transform: uppercase; }
+      .stat-value { font-family: Anton, sans-serif; font-size: 28px; font-weight: bold; fill: #E61919; }
+      .stat-label { font-family: JetBrains Mono, monospace; font-size: 11px; fill: #050505; letter-spacing: 1px; }
+      .roast { font-family: JetBrains Mono, monospace; font-size: 11px; fill: #050505; }
+    </style>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" width="560" height="280" />
+
+  <!-- Top accent bar -->
+  <rect class="accent" width="560" height="12" />
+
+  <!-- Border -->
+  <rect class="border" x="1.5" y="1.5" width="557" height="277" rx="0" />
+
+  <!-- Header badge -->
+  <rect x="20" y="24" width="120" height="24" fill="#050505" />
+  <text x="80" y="40" text-anchor="middle" class="header">GIT-VIBE // v1.0</text>
+
+  <!-- Author name -->
+  <text x="20" y="72" class="subtitle">@rihan</text>
+
+  <!-- Archetype (main title) -->
+  <text x="20" y="120" class="title"><tspan x="20" dy="0">THE</tspan><tspan x="20" dy="45">NOCTURNAL</tspan><tspan x="20" dy="45">GREMLIN</tspan></text>
+
+  <!-- Stats row -->
+  <g transform="translate(20, 200)">
+    <!-- Commits -->
+    <text x="0" y="0" class="stat-value">10</text>
+    <text x="0" y="16" class="stat-label">COMMITS</text>
+
+    <!-- Night Owl -->
+    <text x="100" y="0" class="stat-value">50%</text>
+    <text x="100" y="16" class="stat-label">NIGHT OWL</text>
+
+    
+
+    
+  </g>
+
+  <!-- Roast -->
+  <g transform="translate(20, 230)">
+    <text x="0" y="0" class="roast">"Bro, 50% of your commits happen between 11 PM and 5 AM. Your circadian rhythm is..."</text>
+  </g>
+
+  <!-- Theme indicator -->
+  <text x="540" y="260" text-anchor="end" class="subtitle" fill-opacity="0.5">BRUTAL // TACTICAL TELEMETRY</text>
+</svg>

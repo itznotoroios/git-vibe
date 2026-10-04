@@ -424,7 +424,7 @@ export function renderHtmlCard(profile, options = {}) {
       </div>
 
       <div class="archetype-title">
-        ${archetype.replace(/ /g, '<span class="red"> </span>')}
+        ${archetype.replace(/[-\s]+/g, '<span class="red"> </span>')}
       </div>
 
       <div class="vibe-score">

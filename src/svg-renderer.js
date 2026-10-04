@@ -156,8 +156,12 @@ export function renderSvgCard(profile, options = {}) {
  * @returns {string} SVG markup
  */
 export function renderSvgBadge(stats, theme = 'brutal') {
-  const { author, totalCommits, nightOwlRatio, archetype } = stats;
+  const author = stats?.author || 'unknown';
+  const archetype = stats?.archetype || 'UNKNOWN';
+  const nightOwlRatio = stats?.nightOwlRatio || 0;
   const nightPct = Math.round(nightOwlRatio * 100);
+
+  const archetypeDisplay = archetype.split(' ').slice(0, 2).join(' ');
 
   const themes = {
     brutal: { bg: '#F4F4F0', fg: '#050505', accent: '#E61919' },

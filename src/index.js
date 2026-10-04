@@ -1,5 +1,5 @@
 /**
- * index.js - Main controller orchestration for git-vibe.
+ * index.js - Main controller orchestration for git-vibe v1.2.
  * Orchestrates git log parsing, analysis, classification, and rendering.
  */
 
@@ -8,10 +8,17 @@ import { analyzeCommits } from './analyzer.js';
 import { classifyVibe } from './classifier.js';
 import { renderAsciiCard, renderPlainAsciiCard } from './ascii-renderer.js';
 import { renderHtmlCard } from './html-renderer.js';
-import { exportProfile } from './output-formatters.js';
+import { renderSvgCard, renderSvgBadge } from './svg-renderer.js';
+import { renderHeatmap, renderSvgHeatmap, renderBarHeatmap } from './heatmap-renderer.js';
 import { generateEnhancedRoast, suggestCommitMessages, shouldUseLLM } from './llm-roaster.js';
-import { writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { calculateSimilarity, generateComparison, renderComparisonHtml } from './comparison.js';
+import { exportProfile } from './output-formatters.js';
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Runs the full git-vibe pipeline.
@@ -20,36 +27,27 @@ import { resolve } from 'node:path';
  * @param {string} options.outputDir - Directory to write output files to
  * @param {string} options.format - Output format: ascii, html, json, md, svg, table, all
  * @param {boolean} options.enhanced - Use LLM for enhanced roasts
+ * @param {boolean} options.comparison - Generate comparison with sample profiles
  * @returns {{ profile: object, outputs: object }}
  */
 export async function runVibe({ 
   mock = false, 
   outputDir = process.cwd(),
   format = 'all',
-  enhanced = false
+  enhanced = false,
+  comparison = false
 } = {}) {
   let commits;
 
   if (mock) {
-    // Mock data for testing without a real git repo
-    commits = [
-      { hash: 'a1', author: 'rihan', date: 'Sun Oct 4 23:30:00 2026 +0530', message: 'fix: login issue' },
-      { hash: 'b2', author: 'rihan', date: 'Mon Oct 5 02:30:00 2026 +0530', message: 'fix' },
-      { hash: 'c3', author: 'rihan', date: 'Mon Oct 5 10:00:00 2026 +0530', message: 'feat: new component' },
-      { hash: 'd4', author: 'rihan', date: 'Mon Oct 5 12:00:00 2026 +0530', message: 'refactor: simplify auth module' },
-      { hash: 'e5', author: 'rihan', date: 'Mon Oct 5 14:00:00 2026 +0530', message: 'cleanup' },
-      { hash: 'f6', author: 'rihan', date: 'Tue Oct 6 23:45:00 2026 +0530', message: 'fix: please work' },
-      { hash: 'g7', author: 'rihan', date: 'Wed Oct 7 01:15:00 2026 +0530', message: 'fml' },
-      { hash: 'h8', author: 'rihan', date: 'Wed Oct 7 09:00:00 2026 +0530', message: 'feat: dashboard v2' },
-      { hash: 'i9', author: 'rihan', date: 'Wed Oct 7 11:00:00 2026 +0530', message: 'refactor: cleanup imports' },
-      { hash: 'j10', author: 'rihan', date: 'Thu Oct 8 23:00:00 2026 +0530', message: 'fix: bug' }
-    ];
+    // Mock data for testing
+    commits = generateMockCommits();
   } else {
     commits = getRawGitLogs();
   }
 
   if (commits.length < 5) {
-    throw new Error(`INSUFFICIENT_COMMITS: Only found ${commits.length} commits. Need at least 5 to analyze a vibe.`);
+    throw new Error(`INSUFFICIENT_COMMITS: Only found ${commits.length} commits. Need at least 5.`);
   }
 
   // Analyze commits
@@ -62,13 +60,13 @@ export async function runVibe({
   // Generate commit suggestions
   profile.subMetrics.commitSuggestions = suggestCommitMessages(stats, profile.archetype);
 
-  // Enhanced roast with LLM (if enabled and available)
+  // Enhanced roast with LLM (if enabled)
   if (enhanced && shouldUseLLM()) {
     try {
       const enhancedRoast = await generateEnhancedRoast(stats, profile.archetype);
       if (enhancedRoast) {
         profile.enhancedRoast = enhancedRoast;
-        profile.roast = enhancedRoast; // Replace with LLM roast
+        profile.roast = enhancedRoast;
       }
     } catch (error) {
       console.error('[git-vibe] LLM enhancement failed:', error.message);
@@ -83,7 +81,7 @@ export async function runVibe({
     outputs.ascii = renderAsciiCard(profile);
   }
 
-  // HTML card
+  // HTML card with heatmap
   if (format === 'html' || format === 'all') {
     outputs.html = renderHtmlCard(profile);
     const htmlPath = resolve(outputDir, 'git-vibe-profile.html');
@@ -111,11 +109,26 @@ export async function runVibe({
 
   // SVG badge
   if (format === 'svg' || format === 'all') {
-    const svgExport = exportProfile(profile, 'svg');
-    outputs.svg = svgExport.content;
+    const svgBadge = renderSvgBadge(profile.stats, 'brutal');
+    outputs.svg = svgBadge;
     const svgPath = resolve(outputDir, 'git-vibe-badge.svg');
-    writeFileSync(svgPath, svgExport.content, 'utf8');
+    writeFileSync(svgPath, svgBadge, 'utf8');
     outputs.svgPath = svgPath;
+
+    // Full SVG card
+    const svgCard = renderSvgCard(profile, { theme: 'brutal', width: 560, height: 280 });
+    const svgCardPath = resolve(outputDir, 'git-vibe-card.svg');
+    writeFileSync(svgCardPath, svgCard, 'utf8');
+    outputs.svgCardPath = svgCardPath;
+  }
+
+  // Heatmap visualization
+  if (format === 'heatmap' || format === 'all') {
+    const heatmapSvg = renderSvgHeatmap(profile.stats, { theme: 'dark' });
+    outputs.heatmapSvg = heatmapSvg;
+    const heatmapPath = resolve(outputDir, 'git-vibe-heatmap.svg');
+    writeFileSync(heatmapPath, heatmapSvg, 'utf8');
+    outputs.heatmapPath = heatmapPath;
   }
 
   // Terminal table
@@ -123,5 +136,65 @@ export async function runVibe({
     outputs.table = exportProfile(profile, 'table').content;
   }
 
+  // Comparison mode
+  if (comparison) {
+    const sampleProfiles = generateSampleProfiles(stats);
+    const comparisons = sampleProfiles.map(sample => ({
+      comparison: generateComparison(profile, sample),
+      sample
+    }));
+    outputs.comparisons = comparisons;
+    outputs.comparisonHtml = renderComparisonHtml(comparisons[0]?.comparison);
+  }
+
   return { profile, outputs };
 }
+
+/**
+ * Generate mock commits for testing.
+ * @returns {object[]}
+ */
+function generateMockCommits() {
+  return [
+    { hash: 'a1', author: 'rihan', date: '2026-10-04T23:30:00+05:30', message: 'fix: login issue' },
+    { hash: 'b2', author: 'rihan', date: '2026-10-05T02:30:00+05:30', message: 'fix' },
+    { hash: 'c3', author: 'rihan', date: '2026-10-05T10:00:00+05:30', message: 'feat: new component' },
+    { hash: 'd4', author: 'rihan', date: '2026-10-05T12:00:00+05:30', message: 'refactor: simplify auth module' },
+    { hash: 'e5', author: 'rihan', date: '2026-10-05T14:00:00+05:30', message: 'cleanup' },
+    { hash: 'f6', author: 'rihan', date: '2026-10-06T23:45:00+05:30', message: 'fix: please work' },
+    { hash: 'g7', author: 'rihan', date: '2026-10-07T01:15:00+05:30', message: 'fml' },
+    { hash: 'h8', author: 'rihan', date: '2026-10-07T09:00:00+05:30', message: 'feat: dashboard v2' },
+    { hash: 'i9', author: 'rihan', date: '2026-10-07T11:00:00+05:30', message: 'refactor: cleanup imports' },
+    { hash: 'j10', author: 'rihan', date: '2026-10-08T23:00:00+05:30', message: 'fix: bug' }
+  ];
+}
+
+/**
+ * Generate sample profiles for comparison.
+ * @param {object} stats
+ * @returns {object[]}
+ */
+function generateSampleProfiles(stats) {
+  return [
+    {
+      stats: { ...stats, author: 'alex', nightOwlRatio: 0.1, peakHour: 10, consistencyScore: 85 },
+      archetype: 'THE MORNING LARK',
+      emoji: '🌅',
+      vibeScore: '10% Night / 90% Day'
+    },
+    {
+      stats: { ...stats, author: 'sam', nightOwlRatio: 0.8, peakHour: 2, consistencyScore: 30 },
+      archetype: 'THE NOCTURNAL GREMLIN',
+      emoji: '🦉',
+      vibeScore: '80% Night / 20% Day'
+    },
+    {
+      stats: { ...stats, author: 'jordan', nightOwlRatio: 0.3, peakHour: 15, consistencyScore: 95 },
+      archetype: 'THE STABLE HAND',
+      emoji: '🐴',
+      vibeScore: '50% Stability / 50% Predictable'
+    }
+  ];
+}
+
+export default runVibe;

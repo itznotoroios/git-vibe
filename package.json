@@ -1,16 +1,29 @@
 {
   "name": "git-vibe",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Your developer horoscope & personality profile based on your real git history.",
   "type": "module",
   "main": "src/index.js",
   "bin": {
     "git-vibe": "./bin/index.js"
   },
+  "exports": {
+    ".": "./src/index.js",
+    "./analyzer": "./src/analyzer.js",
+    "./classifier": "./src/classifier.js",
+    "./ascii": "./src/ascii-renderer.js",
+    "./html": "./src/html-renderer.js",
+    "./svg": "./src/svg-renderer.js",
+    "./comparison": "./src/comparison.js",
+    "./heatmap": "./src/heatmap-renderer.js",
+    "./llm": "./src/llm-roaster.js",
+    "./formats": "./src/output-formatters.js"
+  },
   "scripts": {
     "start": "node bin/index.js",
     "test": "node --test tests/**/*.test.js",
-    "test:watch": "node --test --watch tests/**/*.test.js"
+    "test:watch": "node --test --watch tests/**/*.test.js",
+    "dev": "node bin/index.js --mock"
   },
   "keywords": [
     "git",
@@ -19,13 +32,26 @@
     "horoscope",
     "cli",
     "developer",
-    "brutalist"
+    "brutalist",
+    "profile",
+    "analytics"
   ],
-  "author": "",
+  "author": "ritznotoroios",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itznotoroios/git-vibe.git"
+  },
+  "homepage": "https://github.com/itznotoroios/git-vibe",
+  "bugs": {
+    "url": "https://github.com/itznotoroios/git-vibe/issues"
+  },
   "dependencies": {},
   "devDependencies": {},
   "engines": {
     "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
