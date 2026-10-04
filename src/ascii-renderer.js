@@ -38,7 +38,7 @@ export function renderAsciiCard(profile) {
   const lines = [];
 
   // Header
-  lines.push(`${ANSI.BOLD}${ANSI.BG_RED}${ANSI.WHITE}  GIT-VIBE CARD: @${author}  ${ANSI.RESET}`);
+  lines.push(`${ANSI.BOLD}${ANSI.BG_RED}${ANSI.WHITE}  GIT-VIBE CARD: @${author} ${profile.emoji || '📊'}  ${ANSI.RESET}`);
   lines.push(horizontalBorder);
 
   // Archetype

@@ -14,6 +14,7 @@ test('classifyVibe - classifies NOCTURNAL GREMLIN archetype correctly', () => {
   const result = classifyVibe(stats);
   assert.strictEqual(result.archetype, 'THE NOCTURNAL GREMLIN');
   assert.ok(result.roast.length > 0);
+  assert.strictEqual(result.emoji, '🦉');
 });
 
 test('classifyVibe - classifies CHAOTIC FIXER archetype correctly', () => {
@@ -27,6 +28,7 @@ test('classifyVibe - classifies CHAOTIC FIXER archetype correctly', () => {
 
   const result = classifyVibe(stats);
   assert.strictEqual(result.archetype, 'THE CHAOTIC FIXER');
+  assert.strictEqual(result.emoji, '🔥');
 });
 
 test('classifyVibe - classifies GIT-PHILOSOPHY MAJOR archetype correctly', () => {
@@ -40,6 +42,7 @@ test('classifyVibe - classifies GIT-PHILOSOPHY MAJOR archetype correctly', () =>
 
   const result = classifyVibe(stats);
   assert.strictEqual(result.archetype, 'THE GIT-PHILOSOPHY MAJOR');
+  assert.strictEqual(result.emoji, '📝');
 });
 
 test('classifyVibe - classifies REFACTORING ASSASSIN archetype correctly', () => {
@@ -53,6 +56,7 @@ test('classifyVibe - classifies REFACTORING ASSASSIN archetype correctly', () =>
 
   const result = classifyVibe(stats);
   assert.strictEqual(result.archetype, 'THE REFACTORING ASSASSIN');
+  assert.strictEqual(result.emoji, '✂️');
 });
 
 test('classifyVibe - classifies APPRENTICE BOOTCAMPER archetype correctly', () => {
@@ -66,6 +70,7 @@ test('classifyVibe - classifies APPRENTICE BOOTCAMPER archetype correctly', () =
 
   const result = classifyVibe(stats);
   assert.strictEqual(result.archetype, 'THE APPRENTICE BOOTCAMPER');
+  assert.strictEqual(result.emoji, '🌱');
 });
 
 test('classifyVibe - returns a valid vibe object with required fields', () => {
@@ -81,4 +86,5 @@ test('classifyVibe - returns a valid vibe object with required fields', () => {
   assert.ok(result.archetype);
   assert.ok(result.roast);
   assert.ok(result.vibeScore);
+  assert.ok(result.emoji);
 });
